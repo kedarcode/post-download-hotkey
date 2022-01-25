@@ -1,0 +1,26 @@
+from pynput import keyboard
+import pyperclip
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+import urllib.request
+
+ser=Service('C:\Program Files (x86)\chromedriver\chromedriver.exe')
+options=webdriver.ChromeOptions()
+options.add_argument('--user-data-dir=C:\\Users\\KEDAR\\PycharmProjects\\youtube\\UserData')
+options.add_argument('--headless')
+def action():
+    link=pyperclip.paste()
+    if 'instagram' in link.lower():
+        driver = webdriver.Chrome(service=ser, options=options)
+        driver.get(link)
+        try:
+            src=driver.find_element(By.CLASS_NAME,'FFVAD').get_attribute('src')
+            print(src)
+            urllib.request.urlretrieve(src, "C:\\Users\\KEDAR\\PycharmProjects\\youtube\\download_image\\"+link.split('/')[-2]+".jpg")
+        except:
+            print('cant find')
+        driver.quit()
+
+with keyboard.GlobalHotKeys({ '<ctrl>+q': action}) as h:
+    h.join()
